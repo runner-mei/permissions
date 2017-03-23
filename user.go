@@ -3,6 +3,7 @@ package permissions
 import (
 	"bytes"
 	"database/sql"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"strings"
@@ -82,6 +83,13 @@ type Role struct {
 	CreatedAt      time.Time `json:"created_at,omitempty"`
 }
 
+func (role *Role) Keys() {
+	var keys []string
+	if err := json.Unmarshal([]byte(role.PermissionKeys), &keys); err != nil {
+
+	}
+}
+
 // User 代表一个用户
 type User struct {
 	ID          int64     `json:"id,omitempty"`
@@ -158,7 +166,7 @@ func (self *UserRBAC) Name() string {
 }
 
 func (self *UserRBAC) IsAdmin() bool {
-	panic("not implemented")
+	return self.User.Name == "admin" || self.User.Name == "administrator"
 }
 
 func (self *UserRBAC) HasPermission(key string) bool {
